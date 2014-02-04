@@ -30,7 +30,7 @@ namespace dnlib.DotNet {
 	/// <summary>
 	/// A high-level representation of a row in the Event table
 	/// </summary>
-	public abstract class EventDef : IHasCustomAttribute, IHasSemantic, IFullName, IMemberRef {
+	public abstract class EventDef : IHasCustomAttribute, IHasSemantic, IFullName, IMemberRef, IDefinition {
 		/// <summary>
 		/// The row id in its table
 		/// </summary>
