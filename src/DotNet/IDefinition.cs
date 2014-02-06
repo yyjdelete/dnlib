@@ -14,5 +14,7 @@ namespace dnlib.DotNet
     /// </remarks>
     public interface IDefinition : ICodedToken, IHasCustomAttribute
     {
+        UTF8String Name { get; set; }
+        string FullName { get; }
     }
 }

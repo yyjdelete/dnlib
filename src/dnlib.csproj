@@ -87,6 +87,7 @@
     <Compile Include="DotNet\FileAttributes.cs" />
     <Compile Include="DotNet\FileDef.cs" />
     <Compile Include="DotNet\FullNameCreator.cs" />
+    <Compile Include="DotNet\GenericArgumentResolver.cs" />
     <Compile Include="DotNet\GenericArguments.cs" />
     <Compile Include="DotNet\GenericParam.cs" />
     <Compile Include="DotNet\GenericParamAttributes.cs" />
