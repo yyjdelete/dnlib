@@ -13,8 +13,15 @@ namespace dnlib.DotNet
     /// <see cref="FieldDef"/>, <see cref="PropertyDef"/> and <see cref="EventDef"/>.
     /// </remarks>
     public interface IDefinition : ICodedToken, IHasCustomAttribute
-    {
-        UTF8String Name { get; set; }
+	{
+		/// <summary>
+		/// Gets the name
+		/// </summary>
+		UTF8String Name { get; set; }
+
+		/// <summary>
+		/// Gets the full name
+		/// </summary>
         string FullName { get; }
     }
 }

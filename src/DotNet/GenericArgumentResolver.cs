@@ -17,7 +17,6 @@ namespace dnlib.DotNet
         /// </summary>
         /// <param name="typeSig">The type signature.</param>
         /// <param name="typeGenArgs">The type generic arguments.</param>
-        /// <param name="methodGenArgs">The method generic arguments.</param>
         /// <returns>Resolved type signature.</returns>
         /// <exception cref="System.ArgumentException">No generic arguments to resolve.</exception>
         public static TypeSig Resolve(TypeSig typeSig, IList<TypeSig> typeGenArgs)
@@ -40,7 +39,6 @@ namespace dnlib.DotNet
         /// </summary>
         /// <param name="methodSig">The method signature.</param>
         /// <param name="typeGenArgs">The type generic arguments.</param>
-        /// <param name="methodGenArgs">The method generic arguments.</param>
         /// <returns>Resolved method signature.</returns>
         /// <exception cref="System.ArgumentException">No generic arguments to resolve.</exception>
         public static MethodSig Resolve(MethodSig methodSig, IList<TypeSig> typeGenArgs)
