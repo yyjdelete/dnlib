@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -1833,6 +1833,8 @@ namespace dnlib.DotNet {
 			// If one is a nested type, the other one must be too
 			if ((ea = ra as TypeRef) != null | (eb = ib as ExportedType) != null)
 				result = Equals(ea, eb);
+			else if (DontCompareTypeScope)
+				result = true;
 			else if ((ma = ra as IModule) != null & (fb = ib as FileDef) != null)
 				result = Equals(ma, fb) && Equals(a.DefinitionAssembly, b.DefinitionAssembly);
 			else if ((aa = ra as AssemblyRef) != null & (ab = ib as AssemblyRef) != null)

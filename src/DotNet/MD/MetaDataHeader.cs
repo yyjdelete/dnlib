@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -135,8 +135,6 @@ namespace dnlib.DotNet.MD {
 			this.versionString = ReadString(reader, stringLength);
 			this.offset2ndPart = (uint)(reader.Position - startOffset);
 			this.flags = (StorageFlags)reader.ReadByte();
-			if (verify && this.flags != 0)
-				throw new BadImageFormatException(string.Format("Storage flags != 0 ({0})", this.flags));
 			this.reserved2 = reader.ReadByte();
 			this.streams = reader.ReadUInt16();
 			this.streamHeaders = new StreamHeader[streams];

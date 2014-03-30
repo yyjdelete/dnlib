@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -72,6 +72,12 @@ namespace dnlib.DotNet.Emit {
 		/// </summary>
 		public IList<ExceptionHandler> ExceptionHandlers {
 			get { return exceptionHandlers; }
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		protected MethodBodyReaderBase() {
 		}
 
 		/// <summary>
@@ -491,7 +497,7 @@ namespace dnlib.DotNet.Emit {
 		/// <param name="index">A parameter index</param>
 		/// <returns>A <see cref="Parameter"/> or <c>null</c> if <paramref name="index"/> is invalid</returns>
 		protected Parameter GetParameter(int index) {
-			if ((uint)index >= parameters.Count)
+			if ((uint)index >= (uint)parameters.Count)
 				return null;
 			return parameters[index];
 		}
@@ -502,7 +508,7 @@ namespace dnlib.DotNet.Emit {
 		/// <param name="index">A local index</param>
 		/// <returns>A <see cref="Local"/> or <c>null</c> if <paramref name="index"/> is invalid</returns>
 		protected Local GetLocal(int index) {
-			if ((uint)index >= locals.Count)
+			if ((uint)index >= (uint)locals.Count)
 				return null;
 			return locals[index];
 		}

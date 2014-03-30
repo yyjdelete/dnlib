@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -173,6 +173,13 @@ namespace dnlib.DotNet.MD {
 
 			if (tablesStream == null)
 				throw new BadImageFormatException("Missing MD stream");
+			InitializeNonExistentHeaps();
+		}
+
+		/// <summary>
+		/// Creates empty heap objects if they're not present in the metadata
+		/// </summary>
+		protected void InitializeNonExistentHeaps() {
 			if (stringsStream == null)
 				stringsStream = new StringsStream();
 			if (usStream == null)

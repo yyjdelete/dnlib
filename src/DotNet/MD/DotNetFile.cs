@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -152,8 +152,6 @@ namespace dnlib.DotNet.MD {
 				if (dotNetDir.Size < 0x48)
 					throw new BadImageFormatException(".NET data directory size < 0x48");
 				var cor20Header = new ImageCor20Header(cor20HeaderStream = peImage.CreateStream(dotNetDir.VirtualAddress, 0x48), verify);
-				if (cor20Header.HasNativeHeader)
-					throw new BadImageFormatException(".NET native header isn't supported");	//TODO: Fix this
 				if (cor20Header.MetaData.VirtualAddress == 0)
 					throw new BadImageFormatException(".NET MetaData RVA is 0");
 				if (cor20Header.MetaData.Size < 16)

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -24,7 +24,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Security;
 using dnlib.PE;
 using dnlib.Utils;
 using dnlib.IO;
@@ -39,7 +41,7 @@ namespace dnlib.DotNet {
 	/// <summary>
 	/// Created from a row in the Module table
 	/// </summary>
-	public sealed class ModuleDefMD : ModuleDefMD2, IInstructionOperandResolver {
+	public sealed class ModuleDefMD : ModuleDefMD2, IInstructionOperandResolver, ISignatureReaderHelper {
 		/// <summary>The file that contains all .NET metadata</summary>
 		DotNetFile dnFile;
 		IMethodDecrypter methodDecrypter;
@@ -1320,6 +1322,7 @@ namespace dnlib.DotNet {
 		/// </summary>
 		/// <param name="offset">Offset of resource relative to the .NET resources section</param>
 		/// <returns>A stream the size of the resource</returns>
+		[HandleProcessCorruptedStateExceptions, SecurityCritical]	// Req'd on .NET 4.0
 		IImageStream CreateResourceStream(uint offset) {
 			IImageStream fs = null, imageStream = null;
 			try {
@@ -1711,6 +1714,10 @@ namespace dnlib.DotNet {
 				return BlobStream.Read(msRow.Instantiation);
 			}
 
+			return null;
+		}
+
+		TypeSig ISignatureReaderHelper.ConvertRTInternalAddress(IntPtr address) {
 			return null;
 		}
 	}

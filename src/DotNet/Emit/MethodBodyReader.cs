@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -185,6 +185,7 @@ namespace dnlib.DotNet.Emit {
 		/// <summary>
 		/// Reads the method body header, locals, all instructions, and the exception handlers (if any)
 		/// </summary>
+		/// <returns><c>true</c> if it worked, and <c>false</c> if something failed</returns>
 		public bool Read() {
 			try {
 				if (!ReadHeader())

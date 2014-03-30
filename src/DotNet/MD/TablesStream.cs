@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -42,6 +42,7 @@ namespace dnlib.DotNet.MD {
 		uint extraData;
 		MDTable[] mdTables;
 
+		HotTableStream hotTableStream;
 		IColumnReader columnReader;
 		IRowReader<RawMethodRow> methodRowReader;
 
@@ -92,6 +93,11 @@ namespace dnlib.DotNet.MD {
 		public MDTable MethodSpecTable;
 		public MDTable GenericParamConstraintTable;
 #pragma warning restore
+
+		internal HotTableStream HotTableStream {
+			get { return hotTableStream; }
+			set { hotTableStream = value; }
+		}
 
 		/// <summary>
 		/// Gets/sets the column reader
