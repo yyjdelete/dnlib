@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -121,7 +121,7 @@ namespace dnlib.DotNet {
 		public byte[] PublicExponent {
 			get { return publicExponent; }
 			set {
-				if (publicExponent == null || publicExponent.Length != 4)
+				if (value == null || value.Length != 4)
 					throw new ArgumentException("PublicExponent must be exactly 4 bytes");
 				publicExponent = value;
 			}
@@ -321,7 +321,7 @@ namespace dnlib.DotNet {
 		public byte[] PublicExponent {
 			get { return publicExponent; }
 			set {
-				if (publicExponent == null || publicExponent.Length != 4)
+				if (value == null || value.Length != 4)
 					throw new ArgumentException("PublicExponent must be exactly 4 bytes");
 				publicExponent = value;
 			}

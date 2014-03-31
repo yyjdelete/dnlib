@@ -1,5 +1,5 @@
-/*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+﻿/*
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -21,11 +21,18 @@
     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-﻿using System;
-#pragma warning disable 1591	// XML doc warning
-
-namespace System.Runtime.CompilerServices {
-	[AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
-	sealed class ExtensionAttribute : Attribute {
+namespace dnlib.DotNet.MD {
+	/// <summary>
+	/// Heap type. The values are set in stone by MS. Don't change.
+	/// </summary>
+	public enum HeapType : uint {
+		/// <summary>#Strings heap</summary>
+		Strings	= 0,
+		/// <summary>#GUID heap</summary>
+		Guid	= 1,
+		/// <summary>#Blob heap</summary>
+		Blob	= 2,
+		/// <summary>#US heap</summary>
+		US		= 3,
 	}
 }

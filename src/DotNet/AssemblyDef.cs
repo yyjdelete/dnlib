@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -805,6 +805,15 @@ namespace dnlib.DotNet {
 		/// </summary>
 		public AssemblyDefUser()
 			: this(UTF8String.Empty, new Version(0, 0, 0, 0)) {
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="name">Simple name</param>
+		/// <exception cref="ArgumentNullException">If any of the args is invalid</exception>
+		public AssemblyDefUser(UTF8String name)
+			: this(name, new Version(0, 0, 0, 0), new PublicKey()) {
 		}
 
 		/// <summary>

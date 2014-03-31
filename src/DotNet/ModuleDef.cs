@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012-2013 de4dot@gmail.com
+    Copyright (C) 2012-2014 de4dot@gmail.com
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -620,7 +620,7 @@ namespace dnlib.DotNet {
 		/// <returns>The imported field or <c>null</c> if <paramref name="fieldInfo"/> is invalid
 		/// or if we failed to import the field</returns>
 		public MemberRef Import(FieldInfo fieldInfo) {
-			return new Importer(this).Import(fieldInfo);
+			return new Importer(this).Import(fieldInfo) as MemberRef;
 		}
 
 		/// <summary>
