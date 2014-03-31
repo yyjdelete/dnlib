@@ -4,15 +4,14 @@ using System.Text;
 
 namespace dnlib.DotNet
 {
-    /// <summary>
-    /// Indicate the structural definitions of interest
-    /// </summary>
-    /// <remarks>
-    /// <see cref="IDefinition"/> is implemented by <see cref="AssemblyDef"/>,
-    /// <see cref="ModuleDef"/>, <see cref="TypeDef"/>, <see cref="MethodDef"/>,
-    /// <see cref="FieldDef"/>, <see cref="PropertyDef"/> and <see cref="EventDef"/>.
-    /// </remarks>
-    public interface IDefinition : ICodedToken, IHasCustomAttribute
+	/// <summary>
+	/// Indicate the structural definitions of interest
+	/// </summary>
+	/// <remarks>
+	/// <see cref="IDefinition"/> is implemented by <see cref="TypeDef"/>, <see cref="MethodDef"/>,
+	/// <see cref="FieldDef"/>, <see cref="PropertyDef"/> and <see cref="EventDef"/>.
+	/// </remarks>
+	public interface IDefinition : ICodedToken, IHasCustomAttribute
 	{
 		/// <summary>
 		/// Gets the name
@@ -22,6 +21,11 @@ namespace dnlib.DotNet
 		/// <summary>
 		/// Gets the full name
 		/// </summary>
-        string FullName { get; }
-    }
+		string FullName { get; }
+
+		/// <summary>
+		/// Gets the enclosing type.
+		/// </summary>
+		TypeDef DeclaringType { get; }
+	}
 }

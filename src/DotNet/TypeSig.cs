@@ -738,7 +738,7 @@ namespace dnlib.DotNet {
 	/// <summary>
 	/// Represents a <see cref="dnlib.DotNet.ElementType.Var"/>
 	/// </summary>
-	public sealed class GenericVar : GenericSig {
+	public class GenericVar : GenericSig {
 		/// <inheritdoc/>
 		public override ElementType ElementType {
 			get { return ElementType.Var; }
@@ -758,7 +758,7 @@ namespace dnlib.DotNet {
 	/// <summary>
 	/// Represents a <see cref="dnlib.DotNet.ElementType.MVar"/>
 	/// </summary>
-	public sealed class GenericMVar : GenericSig {
+	public class GenericMVar : GenericSig {
 		/// <inheritdoc/>
 		public override ElementType ElementType {
 			get { return ElementType.MVar; }

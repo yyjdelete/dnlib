@@ -16,20 +16,24 @@ namespace dnlib.DotNet
         /// Resolves the type signature with the specified generic arguments.
         /// </summary>
         /// <param name="typeSig">The type signature.</param>
-        /// <param name="typeGenArgs">The type generic arguments.</param>
+		/// <param name="typeGenArgs">The type generic arguments.</param>
+		/// <param name="methodGenArgs">The method generic arguments.</param>
         /// <returns>Resolved type signature.</returns>
         /// <exception cref="System.ArgumentException">No generic arguments to resolve.</exception>
-        public static TypeSig Resolve(TypeSig typeSig, IList<TypeSig> typeGenArgs)
+		public static TypeSig Resolve(TypeSig typeSig, IList<TypeSig> typeGenArgs, IList<TypeSig> methodGenArgs)
         {
-            if (typeGenArgs == null)
-                throw new ArgumentException("No generic arguments to resolve.");
+			if (typeGenArgs == null && methodGenArgs == null)
+				return typeSig;
 
             var resolver = new GenericArgumentResolver();
             resolver.genericArguments = new GenericArguments();
             resolver.recursionCounter = new RecursionCounter();
 
             if (typeGenArgs != null)
-                resolver.genericArguments.PushTypeArgs(typeGenArgs);
+				resolver.genericArguments.PushTypeArgs(typeGenArgs);
+
+			if (methodGenArgs != null)
+				resolver.genericArguments.PushMethodArgs(methodGenArgs);
 
             return resolver.ResolveGenericArgs(typeSig);
         }
@@ -38,20 +42,21 @@ namespace dnlib.DotNet
         /// Resolves the method signature with the specified generic arguments.
         /// </summary>
         /// <param name="methodSig">The method signature.</param>
-        /// <param name="typeGenArgs">The type generic arguments.</param>
+		/// <param name="typeGenArgs">The type generic arguments.</param>
+		/// <param name="methodGenArgs">The method generic arguments.</param>
         /// <returns>Resolved method signature.</returns>
         /// <exception cref="System.ArgumentException">No generic arguments to resolve.</exception>
-        public static MethodSig Resolve(MethodSig methodSig, IList<TypeSig> typeGenArgs)
+		public static MethodSig Resolve(MethodBaseSig methodSig, IList<TypeSig> typeGenArgs, IList<TypeSig> methodGenArgs)
         {
-            if (typeGenArgs == null)
-                throw new ArgumentException("No generic arguments to resolve.");
-
             var resolver = new GenericArgumentResolver();
             resolver.genericArguments = new GenericArguments();
             resolver.recursionCounter = new RecursionCounter();
 
             if (typeGenArgs != null)
-                resolver.genericArguments.PushTypeArgs(typeGenArgs);
+				resolver.genericArguments.PushTypeArgs(typeGenArgs);
+
+			if (methodGenArgs != null)
+				resolver.genericArguments.PushMethodArgs(methodGenArgs);
 
             return resolver.ResolveGenericArgs(methodSig);
         }
@@ -69,20 +74,20 @@ namespace dnlib.DotNet
             return false;
         }
 
-        MethodSig ResolveGenericArgs(MethodSig sig)
+        MethodSig ResolveGenericArgs(MethodBaseSig sig)
         {
             if (sig == null)
                 return null;
             if (!recursionCounter.Increment())
                 return null;
 
-            MethodSig result = ResolveGenericArgs(new MethodSig(sig.GetCallingConvention()), sig);
+            MethodSig result = ResolveGenericArgs(new MethodSig(sig.CallingConvention), sig);
 
             recursionCounter.Decrement();
             return result;
         }
 
-        MethodSig ResolveGenericArgs(MethodSig sig, MethodSig old)
+        MethodSig ResolveGenericArgs(MethodSig sig, MethodBaseSig old)
         {
             sig.RetType = ResolveGenericArgs(old.RetType);
             foreach (var p in old.Params)
