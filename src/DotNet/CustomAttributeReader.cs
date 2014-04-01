@@ -214,7 +214,7 @@ namespace dnlib.DotNet {
 			if (verifyReadAllBytes && reader.Position != reader.Length)
 				throw new CABlobParserException("Not all CA blob bytes were read");
 
-			return new CustomAttribute(ctor, ctorArgs, namedArgs);
+			return new CustomAttribute(ctor, ctorArgs, namedArgs) { RawData = GetRawBlob() };
 		}
 
 		TypeSig FixTypeSig(TypeSig type) {

@@ -80,6 +80,7 @@ namespace dnlib.DotNet {
 		/// </summary>
 		public byte[] RawData {
 			get { return rawData; }
+			internal set { rawData = value; }
 		}
 
 		/// <summary>
