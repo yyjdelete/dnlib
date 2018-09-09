@@ -1030,9 +1030,11 @@ namespace dnlib.DotNet {
 				return null;
 
 			if (resolver != null) {
-				IField resultField = resolver.Resolve(field);
-				if (resultField != null)
+				var resultField = resolver.Resolve(field);
+				if (resultField != null) {
+					recursionCounter.Decrement();
 					return resultField;
+				}
 			}
 
 			MemberRef result = module.UpdateRowId(new MemberRefUser(module, field.Name));
@@ -1065,9 +1067,11 @@ namespace dnlib.DotNet {
 				return null;
 
 			if (resolver != null) {
-				IMethod resultMethod = resolver.Resolve(method);
-				if (resultMethod != null)
+				var resultMethod = resolver.Resolve(method);
+				if (resultMethod != null) {
+					recursionCounter.Decrement();
 					return resultMethod;
+				}
 			}
 
 			MemberRef result = module.UpdateRowId(new MemberRefUser(module, method.Name));
