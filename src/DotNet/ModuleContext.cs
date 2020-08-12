@@ -2,7 +2,7 @@
 
 using System.Threading;
 
-﻿namespace dnlib.DotNet {
+namespace dnlib.DotNet {
 	/// <summary>
 	/// <see cref="ModuleDef"/> context
 	/// </summary>
@@ -15,7 +15,7 @@ using System.Threading;
 		/// </summary>
 		public IAssemblyResolver AssemblyResolver {
 			get {
-				if (assemblyResolver == null)
+				if (assemblyResolver is null)
 					Interlocked.CompareExchange(ref assemblyResolver, NullResolver.Instance, null);
 				return assemblyResolver;
 			}
@@ -27,7 +27,7 @@ using System.Threading;
 		/// </summary>
 		public IResolver Resolver {
 			get {
-				if (resolver == null)
+				if (resolver is null)
 					Interlocked.CompareExchange(ref resolver, NullResolver.Instance, null);
 				return resolver;
 			}
@@ -64,7 +64,7 @@ using System.Threading;
 		public ModuleContext(IAssemblyResolver assemblyResolver, IResolver resolver) {
 			this.assemblyResolver = assemblyResolver;
 			this.resolver = resolver;
-			if (resolver == null && assemblyResolver != null)
+			if (resolver is null && !(assemblyResolver is null))
 				this.resolver = new Resolver(assemblyResolver);
 		}
 	}

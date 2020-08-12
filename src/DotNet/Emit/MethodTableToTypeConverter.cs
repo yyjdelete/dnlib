@@ -1,4 +1,4 @@
-﻿// dnlib: See LICENSE.txt for more info
+// dnlib: See LICENSE.txt for more info
 
 using System;
 using System.Collections.Generic;
@@ -26,8 +26,8 @@ namespace dnlib.DotNet.Emit {
 		static object lockObj = new object();
 
 		static MethodTableToTypeConverter() {
-			if (ptrFieldInfo == null) {
-#if NETSTANDARD2_0 || NETCOREAPP
+			if (ptrFieldInfo is null) {
+#if NETSTANDARD
 				var asmb = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("DynAsm"), AssemblyBuilderAccess.Run);
 #else
 				var asmb = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("DynAsm"), AssemblyBuilderAccess.Run);
@@ -53,14 +53,14 @@ namespace dnlib.DotNet.Emit {
 		}
 
 		static Type GetTypeUsingTypeBuilder(IntPtr address) {
-			if (moduleBuilder == null)
+			if (moduleBuilder is null)
 				return null;
 
 			var tb = moduleBuilder.DefineType(GetNextTypeName());
 			var mb = tb.DefineMethod(METHOD_NAME, SR.MethodAttributes.Static, typeof(void), Array2.Empty<Type>());
 
 			try {
-				if (setMethodBodyMethodInfo != null)
+				if (!(setMethodBodyMethodInfo is null))
 					return GetTypeNET45(tb, mb, address);
 				else
 					return GetTypeNET40(tb, mb, address);
@@ -77,7 +77,7 @@ namespace dnlib.DotNet.Emit {
 			int maxStack = 8;
 			var locals = GetLocalSignature(address);
 			setMethodBodyMethodInfo.Invoke(mb, new object[5] { code, maxStack, locals, null, null });
-#if NETSTANDARD2_0
+#if NETSTANDARD
 			var type = tb.CreateTypeInfo();
 #else
 			var type = tb.CreateType();
@@ -100,7 +100,7 @@ namespace dnlib.DotNet.Emit {
 			sigDoneFieldInfo.SetValue(sigHelper, true);
 			currSigFieldInfo.SetValue(sigHelper, locals.Length);
 			signatureFieldInfo.SetValue(sigHelper, locals);
-#if NETSTANDARD2_0
+#if NETSTANDARD
 			var type = tb.CreateTypeInfo();
 #else
 			var type = tb.CreateType();
@@ -111,7 +111,7 @@ namespace dnlib.DotNet.Emit {
 
 		// .NET 2.0 - 3.5
 		static Type GetTypeNET20(IntPtr address) {
-			if (ptrFieldInfo == null)
+			if (ptrFieldInfo is null)
 				return null;
 			object th = new RuntimeTypeHandle();
 			ptrFieldInfo.SetValue(th, address);

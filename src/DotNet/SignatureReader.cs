@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using dnlib.DotNet.MD;
 using dnlib.IO;
 
 namespace dnlib.DotNet {
@@ -33,6 +34,10 @@ namespace dnlib.DotNet {
 	/// Reads signatures from the #Blob stream
 	/// </summary>
 	public struct SignatureReader {
+		// .NET Core and .NET Framework limit arrays to 32 dimensions. Use a bigger limit
+		// so it's possible to read some bad MD, but not big enough to allocate a ton of mem.
+		const uint MaxArrayRank = 64;
+
 		readonly ISignatureReaderHelper helper;
 		readonly ICorLibTypes corLibTypes;
 		DataReader reader;
@@ -63,7 +68,7 @@ namespace dnlib.DotNet {
 				if (reader.reader.Length == 0)
 					return null;
 				var csig = reader.ReadSig();
-				if (csig != null)
+				if (!(csig is null))
 					csig.ExtraData = reader.GetExtraData();
 				return csig;
 			}
@@ -425,6 +430,7 @@ namespace dnlib.DotNet {
 			case CallingConvention.FastCall:
 			case CallingConvention.VarArg:
 			case CallingConvention.NativeVarArg:
+			case CallingConvention.Unmanaged:
 				result = ReadMethod(callingConvention);
 				break;
 
@@ -444,7 +450,6 @@ namespace dnlib.DotNet {
 				result = ReadGenericInstMethod(callingConvention);
 				break;
 
-			case CallingConvention.Unmanaged:
 			default:
 				result = null;
 				break;
@@ -491,7 +496,7 @@ namespace dnlib.DotNet {
 			for (uint i = 0; i < numParams; i++) {
 				var type = ReadType();
 				if (type is SentinelSig) {
-					if (methodSig.ParamsAfterSentinel == null)
+					if (methodSig.ParamsAfterSentinel is null)
 						methodSig.ParamsAfterSentinel = parameters = new List<TypeSig>((int)(numParams - i));
 					i--;
 				}
@@ -540,7 +545,7 @@ namespace dnlib.DotNet {
 			if (!recursionCounter.Increment())
 				return null;
 
-			uint num;
+			uint num, i;
 			TypeSig nextType, result = null;
 			switch ((ElementType)reader.ReadByte()) {
 			case ElementType.Void:		result = corLibTypes.Void; break;
@@ -564,12 +569,12 @@ namespace dnlib.DotNet {
 
 			case ElementType.Ptr:		result = new PtrSig(ReadType()); break;
 			case ElementType.ByRef:		result = new ByRefSig(ReadType()); break;
-			case ElementType.ValueType:	result = new ValueTypeSig(ReadTypeDefOrRef()); break;
-			case ElementType.Class:		result = new ClassSig(ReadTypeDefOrRef()); break;
+			case ElementType.ValueType:	result = new ValueTypeSig(ReadTypeDefOrRef(false)); break;
+			case ElementType.Class:		result = new ClassSig(ReadTypeDefOrRef(false)); break;
 			case ElementType.FnPtr:		result = new FnPtrSig(ReadSig()); break;
 			case ElementType.SZArray:	result = new SZArraySig(ReadType()); break;
-			case ElementType.CModReqd:	result = new CModReqdSig(ReadTypeDefOrRef(), ReadType()); break;
-			case ElementType.CModOpt:	result = new CModOptSig(ReadTypeDefOrRef(), ReadType()); break;
+			case ElementType.CModReqd:	result = new CModReqdSig(ReadTypeDefOrRef(true), ReadType()); break;
+			case ElementType.CModOpt:	result = new CModOptSig(ReadTypeDefOrRef(true), ReadType()); break;
 			case ElementType.Sentinel:	result = new SentinelSig(); break;
 			case ElementType.Pinned:	result = new PinnedSig(ReadType()); break;
 
@@ -604,7 +609,7 @@ namespace dnlib.DotNet {
 					break;
 				var genericInstSig = new GenericInstSig(nextType as ClassOrValueTypeSig, num);
 				var args = genericInstSig.GenericArguments;
-				for (uint i = 0; i < num; i++)
+				for (i = 0; i < num; i++)
 					args.Add(ReadType());
 				result = genericInstSig;
 				break;
@@ -614,22 +619,28 @@ namespace dnlib.DotNet {
 				uint rank;
 				if (!reader.TryReadCompressedUInt32(out rank))
 					break;
+				if (rank > MaxArrayRank)
+					break;
 				if (rank == 0) {
 					result = new ArraySig(nextType, rank);
 					break;
 				}
 				if (!reader.TryReadCompressedUInt32(out num))
 					break;
+				if (num > MaxArrayRank)
+					break;
 				var sizes = new List<uint>((int)num);
-				for (uint i = 0; i < num; i++) {
+				for (i = 0; i < num; i++) {
 					if (!reader.TryReadCompressedUInt32(out uint size))
 						goto exit;
 					sizes.Add(size);
 				}
 				if (!reader.TryReadCompressedUInt32(out num))
 					break;
+				if (num > MaxArrayRank)
+					break;
 				var lowerBounds = new List<int>((int)num);
-				for (uint i = 0; i < num; i++) {
+				for (i = 0; i < num; i++) {
 					if (!reader.TryReadCompressedInt32(out int size))
 						goto exit;
 					lowerBounds.Add(size);
@@ -657,14 +668,12 @@ exit:
 			return result;
 		}
 
-		/// <summary>
-		/// Reads a <c>TypeDefOrRef</c>
-		/// </summary>
-		/// <returns>A <see cref="ITypeDefOrRef"/> instance</returns>
-		ITypeDefOrRef ReadTypeDefOrRef() {
+		ITypeDefOrRef ReadTypeDefOrRef(bool allowTypeSpec) {
 			if (!reader.TryReadCompressedUInt32(out uint codedToken))
 				return null;
-			return helper.ResolveTypeDefOrRef(codedToken, gpContext);
+			if (!allowTypeSpec && CodedToken.TypeDefOrRef.Decode2(codedToken).Table == Table.TypeSpec)
+				return null;
+			return helper.ResolveTypeDefOrRef(codedToken, default);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿// dnlib: See LICENSE.txt for more info
+// dnlib: See LICENSE.txt for more info
 
 using System;
 using System.Collections.Generic;
@@ -190,9 +190,9 @@ namespace dnlib.DotNet.Resources {
 					throw new ResourceReaderException($"Invalid resource data code: {code}");
 				var userType = userTypes[userTypeIndex];
 				var serializedData = reader.ReadBytes((int)(endPos - reader.Position));
-				if (createResourceDataDelegate != null) {
+				if (!(createResourceDataDelegate is null)) {
 					var res = createResourceDataDelegate(resourceDataFactory, userType, serializedData);
-					if (res != null)
+					if (!(res is null))
 						return res;
 				}
 				return resourceDataFactory.CreateSerialized(serializedData, userType);

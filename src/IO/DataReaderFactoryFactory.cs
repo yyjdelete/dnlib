@@ -1,4 +1,4 @@
-﻿// dnlib: See LICENSE.txt for more info
+// dnlib: See LICENSE.txt for more info
 
 using System;
 using System.IO;
@@ -16,7 +16,7 @@ namespace dnlib.IO {
 
 		public static DataReaderFactory Create(string fileName, bool mapAsImage) {
 			var creator = CreateDataReaderFactory(fileName, mapAsImage);
-			if (creator != null)
+			if (!(creator is null))
 				return creator;
 
 			return ByteArrayDataReaderFactory.Create(File.ReadAllBytes(fileName), fileName);
