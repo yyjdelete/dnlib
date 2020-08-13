@@ -374,11 +374,7 @@ namespace dnlib.DotNet {
 			var pkt = asmName.GetPublicKeyToken();
 			if (pkt is null || pkt.Length == 0)
 				pkt = null;
-
-			AssemblyRef assemblyRef = new AssemblyRefUser(asmName.Name, asmName.Version, PublicKeyBase.CreatePublicKeyToken(pkt), asmName.CultureInfo.Name);
-			if (assemblyRef.IsCorLib())
-				return module.CorLibTypes.AssemblyRef;
-			return module.UpdateRowId(assemblyRef);
+			return module.UpdateRowId(new AssemblyRefUser(asmName.Name, asmName.Version, PublicKeyBase.CreatePublicKeyToken(pkt), asmName.CultureInfo.Name));
 		}
 
 		/// <summary>
@@ -712,9 +708,6 @@ namespace dnlib.DotNet {
 		IResolutionScope CreateScopeReference(IAssembly defAsm, ModuleDef defMod) {
 			if (defAsm is null)
 				return null;
-			if (defAsm.IsCorLib())
-				return module.CorLibTypes.AssemblyRef;
-
 			var modAsm = module.Assembly;
 			if (!(defMod is null) && !(defAsm is null) && !(modAsm is null)) {
 				if (UTF8String.CaseInsensitiveEquals(modAsm.Name, defAsm.Name)) {

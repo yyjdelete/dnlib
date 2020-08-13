@@ -987,7 +987,7 @@ namespace dnlib.DotNet {
 		/// </summary>
 		/// <param name="field">The field</param>
 		/// <returns>The imported type or <c>null</c> if <paramref name="field"/> is invalid</returns>
-		public IField Import(IField field) => (MemberRef)new Importer(this).Import(field);
+		public MemberRef Import(IField field) => (MemberRef)new Importer(this).Import(field);
 
 		/// <summary>
 		/// Imports a <see cref="FieldDef"/> as a <see cref="MemberRef"/>
